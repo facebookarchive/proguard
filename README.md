@@ -1,39 +1,31 @@
-proguard
+ProGuard
 ========
 
-A faster fork of ProGuard.  Based off of ProGuard 4.11 (http://sourceforge.net/p/proguard/code/ci/proguard4.11/tree/)
+A faster fork of ProGuard.  Based off of ProGuard 4.11.  Our tests show this
+fork to be 2.5x faster than upstream ProGuard and produces bit-for-bit identical
+output.
 
+You can find upstream here: http://sourceforge.net/p/proguard/code/ci/proguard4.11/tree/
 
-ProGuard, Java class file shrinker, optimizer, obfuscator, and preverifier
-==========================================================================
+The goal of this fork is to remain bit-for-bit compatible with upstream, and to
+ideally get these patches into upstream proguard.
 
-This distribution contains the following directories:
+# Contributing
 
-- bin      : simple wrapper scripts to run ProGuard, its GUI, and ReTrace
-- lib      : the main jars, compiled and ready to use with "java -jar ...."
-- docs     : the complete documentation, licenses, etc. in html format
-- examples : some example configuration files
-- src      : the source code
-- build    : various alternative build scripts
+We're not adding any features into ProGuard (yet), so pull requests should be
+focused on making ProGuard itself faster while still having identical output.
 
+## Building
 
-The best place to start is docs/index.html
+    ant -f build/build.xml proguard
+Then, you can use `lib/proguard.jar` as a drop in replacement for the
+`proguard.jar` shipped with the Android SDK or used by your build tool.
 
+## Contributor License Agreement ("CLA")
+In order to accept your pull request, we need you to submit a CLA. You only need to do this once, so if you've done this for another Facebook open source project, you're good to go. If you are submitting a pull request for the first time, just let us know that you have completed the CLA and we can cross-check with your GitHub username.
 
-Example
-=======
+Complete your CLA here: <https://code.facebook.com/cla>
 
-If you want to give ProGuard a spin right away, try processing the ProGuard
-jar itself:
-
-    cd examples
-    java -jar ../lib/proguard.jar @proguard.pro
-
-The resulting proguard_out.jar contains the same application, but it's a lot
-smaller.
-
-Enjoy!
-
-http://proguard.sourceforge.net/
-
-Copyright (c) 2002-2013 Eric Lafortune (eric@graphics.cornell.edu)
+License
+========
+GPLv2
