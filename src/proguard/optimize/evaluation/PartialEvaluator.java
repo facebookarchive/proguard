@@ -31,8 +31,6 @@ import proguard.evaluation.*;
 import proguard.evaluation.value.*;
 import proguard.optimize.peephole.BranchTargetFinder;
 
-import java.util.Arrays;
-
 /**
  * This AttributeVisitor performs partial evaluation on the code attributes
  * that it visits.
@@ -71,6 +69,8 @@ implements   AttributeVisitor,
     private boolean[]                generalizedContexts  = new boolean[ClassConstants.TYPICAL_CODE_LENGTH];
     private int[]                    evaluationCounts     = new int[ClassConstants.TYPICAL_CODE_LENGTH];
     private boolean                  evaluateExceptions;
+    private int                      defaultU2maxLocals;
+    private int                      defaultU2maxStack;
 
     private final BasicBranchUnit    branchUnit;
     private final BranchTargetFinder branchTargetFinder;
@@ -462,7 +462,13 @@ implements   AttributeVisitor,
      */
     public TracedVariables getVariablesBefore(int instructionOffset)
     {
-        return variablesBefore[instructionOffset];
+        TracedVariables variableBefore = variablesBefore[instructionOffset];
+        if (variableBefore == null)
+        {
+            variableBefore = new TracedVariables(defaultU2maxLocals);
+            variablesBefore[instructionOffset] = variableBefore;
+        }
+        return variableBefore;
     }
 
 
@@ -472,7 +478,13 @@ implements   AttributeVisitor,
      */
     public TracedVariables getVariablesAfter(int instructionOffset)
     {
-        return variablesAfter[instructionOffset];
+        TracedVariables variableAfter = variablesAfter[instructionOffset];
+        if (variableAfter == null)
+        {
+            variableAfter = new TracedVariables(defaultU2maxLocals);
+            variablesAfter[instructionOffset] = variableAfter;
+        }
+        return variableAfter;
     }
 
 
@@ -482,7 +494,13 @@ implements   AttributeVisitor,
      */
     public TracedStack getStackBefore(int instructionOffset)
     {
-        return stacksBefore[instructionOffset];
+        TracedStack stackBefore = stacksBefore[instructionOffset];
+        if (stackBefore == null)
+        {
+            stackBefore = new TracedStack(defaultU2maxStack);
+            stacksBefore[instructionOffset] = stackBefore;
+        }
+        return stackBefore;
     }
 
 
@@ -492,7 +510,13 @@ implements   AttributeVisitor,
      */
     public TracedStack getStackAfter(int instructionOffset)
     {
-        return stacksAfter[instructionOffset];
+        TracedStack stackAfter = stacksAfter[instructionOffset];
+        if (stackAfter == null)
+        {
+            stackAfter = new TracedStack(defaultU2maxStack);
+            stacksAfter[instructionOffset] = stackAfter;
+        }
+        return stackAfter;
     }
 
 
@@ -1107,49 +1131,18 @@ implements   AttributeVisitor,
         int codeLength = codeAttribute.u4codeLength;
 
         // Create new arrays for storing information at each instruction offset.
-        if (variablesAfter.length < codeLength)
-        {
-            // Create new arrays.
-            branchOriginValues  = new InstructionOffsetValue[codeLength];
-            branchTargetValues  = new InstructionOffsetValue[codeLength];
-            variablesBefore     = new TracedVariables[codeLength];
-            stacksBefore        = new TracedStack[codeLength];
-            variablesAfter      = new TracedVariables[codeLength];
-            stacksAfter         = new TracedStack[codeLength];
-            generalizedContexts = new boolean[codeLength];
-            evaluationCounts    = new int[codeLength];
-        }
-        else
-        {
-            // Reset the arrays.
-            Arrays.fill(branchOriginValues,  null);
-            Arrays.fill(branchTargetValues,  null);
-            Arrays.fill(generalizedContexts, false);
-            Arrays.fill(evaluationCounts,    0);
+        // Create new arrays.
+        branchOriginValues  = new InstructionOffsetValue[codeLength];
+        branchTargetValues  = new InstructionOffsetValue[codeLength];
+        variablesBefore     = new TracedVariables[codeLength];
+        stacksBefore        = new TracedStack[codeLength];
+        variablesAfter      = new TracedVariables[codeLength];
+        stacksAfter         = new TracedStack[codeLength];
+        generalizedContexts = new boolean[codeLength];
+        evaluationCounts    = new int[codeLength];
 
-            for (int index = 0; index < codeLength; index++)
-            {
-                if (variablesBefore[index] != null)
-                {
-                    variablesBefore[index].reset(codeAttribute.u2maxLocals);
-                }
-
-                if (stacksBefore[index] != null)
-                {
-                    stacksBefore[index].reset(codeAttribute.u2maxStack);
-                }
-
-                if (variablesAfter[index] != null)
-                {
-                    variablesAfter[index].reset(codeAttribute.u2maxLocals);
-                }
-
-                if (stacksAfter[index] != null)
-                {
-                    stacksAfter[index].reset(codeAttribute.u2maxStack);
-                }
-            }
-        }
+        defaultU2maxLocals = codeAttribute.u2maxLocals;
+        defaultU2maxStack = codeAttribute.u2maxStack;
     }
 
 
