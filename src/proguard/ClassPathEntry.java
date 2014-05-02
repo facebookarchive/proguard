@@ -47,6 +47,7 @@ public class ClassPathEntry
     private List    earFilter;
     private List    zipFilter;
 
+    private volatile String name;
 
     /**
      * Creates a new ClassPathEntry with the given file and output flag.
@@ -63,14 +64,24 @@ public class ClassPathEntry
      */
     public String getName()
     {
-        try
+        if (name == null)
         {
-            return file.getCanonicalPath();
+            synchronized (this)
+            {
+                if (name == null)
+                {
+                    try
+                    {
+                        name = file.getCanonicalPath();
+                    }
+                    catch (IOException ex)
+                    {
+                        name = file.getPath();
+                    }
+                }
+            }
         }
-        catch (IOException ex)
-        {
-            return file.getPath();
-        }
+        return name;
     }
 
 
@@ -88,7 +99,11 @@ public class ClassPathEntry
      */
     public void setFile(File file)
     {
-        this.file = file;
+        synchronized (this)
+        {
+            this.file = file;
+            name = null;
+        }
     }
 
 
