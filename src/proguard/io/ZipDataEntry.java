@@ -35,6 +35,7 @@ public class ZipDataEntry implements DataEntry
     private final DataEntry      parent;
     private final ZipEntry       zipEntry;
     private       ZipInputStream zipInputStream;
+    private final InputStream    bufferedInputStream;
 
 
     public ZipDataEntry(DataEntry      parent,
@@ -44,6 +45,7 @@ public class ZipDataEntry implements DataEntry
         this.parent         = parent;
         this.zipEntry       = zipEntry;
         this.zipInputStream = zipInputStream;
+        this.bufferedInputStream = new BufferedInputStream(zipInputStream);
     }
 
 
@@ -72,7 +74,7 @@ public class ZipDataEntry implements DataEntry
 
     public InputStream getInputStream() throws IOException
     {
-        return zipInputStream;
+        return bufferedInputStream;
     }
 
 
