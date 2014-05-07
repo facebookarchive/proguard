@@ -108,15 +108,20 @@ implements   ClassVisitor,
     private final CodeAttributeEditor codeAttributeEditor =
         new CodeAttributeEditor(true, true);
 
-    private final InstructionSequenceReplacer instructionSequenceReplacer =
-        new InstructionSequenceReplacer(CONSTANTS,
-                                        INSTRUCTIONS,
-                                        REPLACEMENT_INSTRUCTIONS,
-                                        new BranchTargetFinder(),
-                                        codeAttributeEditor);
+    private final InstructionSequenceReplacer instructionSequenceReplacer;
 
     private final MemberVisitor initializerSimplifier = new AllAttributeVisitor(this);
+    private final BranchTargetFinder branchTargetFinder;
 
+    public SimpleEnumClassSimplifier() {
+        this.branchTargetFinder = new BranchTargetFinder();
+        this.instructionSequenceReplacer =
+            new InstructionSequenceReplacer(CONSTANTS,
+                    INSTRUCTIONS,
+                    REPLACEMENT_INSTRUCTIONS,
+                    branchTargetFinder,
+                    codeAttributeEditor);
+    }
 
     // Implementations for ClassVisitor.
 
@@ -152,6 +157,8 @@ implements   ClassVisitor,
 
     public void visitCodeAttribute(Clazz clazz, Method method, CodeAttribute codeAttribute)
     {
+        branchTargetFinder.visitCodeAttribute(clazz, method, codeAttribute);
+
         // Set up the code attribute editor.
         codeAttributeEditor.reset(codeAttribute.u4codeLength);
 
