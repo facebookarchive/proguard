@@ -1,9 +1,18 @@
 ProGuard
 ========
+ProGuard is a free Java class file shrinker, optimizer, obfuscator, and 
+preverifier. It detects and removes unused classes, fields, methods, and 
+attributes. It optimizes bytecode and removes unused instructions. It renames 
+the remaining classes, fields, and methods using short meaningless names. 
+Finally, it preverifies the processed code for Java 6 or for Java Micro Edition.
 
-A faster fork of ProGuard.  Based off of ProGuard 4.11.  Our tests show this
-fork to be 2.5x faster than upstream ProGuard and produces bit-for-bit identical
-output.
+ProGuard is useful for making code more compact and more efficient, on the 
+desktop, on tablets, on smartphones, and on embedded devices. It also makes code
+more difficult to reverse engineer.
+
+This is a faster fork of ProGuard, based off of ProGuard 4.11.  Our tests show 
+this fork to be 2.5x faster than upstream ProGuard and produces bit-for-bit 
+identical output.
 
 You can find upstream here: http://sourceforge.net/p/proguard/code/ci/proguard4.11/tree/
 
