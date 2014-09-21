@@ -26,9 +26,12 @@ focused on making ProGuard itself faster while still having identical output.
 
 ## Building
 
-    ant -f build/build.xml proguard
+    ant -f build/build.xml anttask
+
 Then, you can use `lib/proguard.jar` as a drop in replacement for the
-`proguard.jar` shipped with the Android SDK or used by your build tool.
+`proguard.jar` shipped with the Android SDK or used by your build tool:
+
+    cp lib/proguard.jar $ANDROID_SDK_HOME/tools/proguard/lib/proguard.jar
 
 ## Contributor License Agreement ("CLA")
 In order to accept your pull request, we need you to submit a CLA. You only need to do this once, so if you've done this for another Facebook open source project, you're good to go. If you are submitting a pull request for the first time, just let us know that you have completed the CLA and we can cross-check with your GitHub username.
