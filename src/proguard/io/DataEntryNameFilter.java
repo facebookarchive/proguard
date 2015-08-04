@@ -21,6 +21,7 @@
 package proguard.io;
 
 import proguard.util.StringMatcher;
+import proguard.util.StringMatcherUtil;
 
 /**
  * This DataEntryFilter filters data entries based on whether their names match
@@ -49,6 +50,6 @@ implements   DataEntryFilter
 
     public boolean accepts(DataEntry dataEntry)
     {
-        return dataEntry != null && stringMatcher.matches(dataEntry.getName());
+        return dataEntry != null && StringMatcherUtil.matchesString(stringMatcher, dataEntry.getName());
     }
 }

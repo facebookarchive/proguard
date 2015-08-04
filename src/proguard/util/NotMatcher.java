@@ -39,6 +39,13 @@ public class NotMatcher implements StringMatcher
 
     // Implementations for StringMatcher.
 
+    public boolean matches(char[] string, int start, int end)
+    {
+        return !matcher.matches(string, start, end);
+    }
+
+    // Implementations for StringMatcher.
+
     public boolean matches(String string)
     {
         return !matcher.matches(string);

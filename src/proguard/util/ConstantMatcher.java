@@ -41,8 +41,12 @@ public class ConstantMatcher implements StringMatcher
 
     // Implementations for StringMatcher.
 
-    public boolean matches(String string)
+    public boolean matches(char[] string, int start, int end)
     {
+        return matches;
+    }
+
+    public boolean matches(String string) {
         return matches;
     }
 }

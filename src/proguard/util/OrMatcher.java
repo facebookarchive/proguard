@@ -41,9 +41,17 @@ public class OrMatcher implements StringMatcher
 
     // Implementations for StringMatcher.
 
+    public boolean matches(char[] string, int start, int end)
+    {
+        return matcher1.matches(string, start, end) ||
+               matcher2.matches(string, start, end);
+    }
+
+    // Implementations for StringMatcher.
+
     public boolean matches(String string)
     {
         return matcher1.matches(string) ||
-               matcher2.matches(string);
+                matcher2.matches(string);
     }
 }

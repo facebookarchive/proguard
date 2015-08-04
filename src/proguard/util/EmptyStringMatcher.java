@@ -29,6 +29,11 @@ public class EmptyStringMatcher implements StringMatcher
 {
     // Implementations for StringMatcher.
 
+    public boolean matches(char[] string, int start, int end)
+    {
+        return end - start + 1 <= 0;
+    }
+
     public boolean matches(String string)
     {
         return string.length() == 0;
