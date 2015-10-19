@@ -31,6 +31,8 @@ import proguard.evaluation.*;
 import proguard.evaluation.value.*;
 import proguard.optimize.peephole.BranchTargetFinder;
 
+import java.util.Arrays;
+
 /**
  * This AttributeVisitor performs partial evaluation on the code attributes
  * that it visits.
@@ -69,6 +71,7 @@ implements   AttributeVisitor,
     private boolean[]                generalizedContexts  = new boolean[ClassConstants.TYPICAL_CODE_LENGTH];
     private int[]                    evaluationCounts     = new int[ClassConstants.TYPICAL_CODE_LENGTH];
     private boolean                  evaluateExceptions;
+    private int                      codeLength;
     private int                      defaultU2maxLocals;
     private int                      defaultU2maxStack;
 
@@ -1010,32 +1013,7 @@ implements   AttributeVisitor,
                     evaluationCounts[offset] += other.evaluationCounts[offset];
                 }
             }
-
-            for (int index = newCodeLength; index < codeLength; index++)
-            {
-                if (variablesBefore[index] != null)
-                {
-                    variablesBefore[index].reset(0);
-                }
-
-                if (stacksBefore[index] != null)
-                {
-                    stacksBefore[index].reset(0);
-                }
-
-                if (variablesAfter[index] != null)
-                {
-                    variablesAfter[index].reset(0);
-                }
-
-                if (stacksAfter[index] != null)
-                {
-                    stacksAfter[index].reset(0);
-                }
-            }
         }
-
-        codeLength = newCodeLength;
     }
 
 
@@ -1160,18 +1138,77 @@ implements   AttributeVisitor,
      */
     private void initializeArrays(CodeAttribute codeAttribute)
     {
-        int codeLength = codeAttribute.u4codeLength;
+        int newCodeLength = codeAttribute.u4codeLength;
 
         // Create new arrays for storing information at each instruction offset.
-        // Create new arrays.
-        branchOriginValues  = new InstructionOffsetValue[codeLength];
-        branchTargetValues  = new InstructionOffsetValue[codeLength];
-        variablesBefore     = new TracedVariables[codeLength];
-        stacksBefore        = new TracedStack[codeLength];
-        variablesAfter      = new TracedVariables[codeLength];
-        stacksAfter         = new TracedStack[codeLength];
-        generalizedContexts = new boolean[codeLength];
-        evaluationCounts    = new int[codeLength];
+        if (branchOriginValues.length < newCodeLength)
+        {
+            // Create new arrays.
+            branchOriginValues  = new InstructionOffsetValue[newCodeLength];
+            branchTargetValues  = new InstructionOffsetValue[newCodeLength];
+            variablesBefore     = new TracedVariables[newCodeLength];
+            stacksBefore        = new TracedStack[newCodeLength];
+            variablesAfter      = new TracedVariables[newCodeLength];
+            stacksAfter         = new TracedStack[newCodeLength];
+            generalizedContexts = new boolean[newCodeLength];
+            evaluationCounts    = new int[newCodeLength];
+        }
+        else
+        {
+            // Reset the old arrays.
+            Arrays.fill(branchOriginValues,  0, codeLength, null);
+            Arrays.fill(branchTargetValues,  0, codeLength, null);
+            Arrays.fill(generalizedContexts, 0, codeLength, false);
+            Arrays.fill(evaluationCounts,    0, codeLength, 0);
+
+            for (int index = 0; index < newCodeLength; index++)
+            {
+                if (variablesBefore[index] != null)
+                {
+                    variablesBefore[index].reset(codeAttribute.u2maxLocals);
+                }
+
+                if (stacksBefore[index] != null)
+                {
+                    stacksBefore[index].reset(codeAttribute.u2maxStack);
+                }
+
+                if (variablesAfter[index] != null)
+                {
+                    variablesAfter[index].reset(codeAttribute.u2maxLocals);
+                }
+
+                if (stacksAfter[index] != null)
+                {
+                    stacksAfter[index].reset(codeAttribute.u2maxStack);
+                }
+            }
+
+            for (int index = newCodeLength; index < codeLength; index++)
+            {
+                if (variablesBefore[index] != null)
+                {
+                    variablesBefore[index].reset(0);
+                }
+
+                if (stacksBefore[index] != null)
+                {
+                    stacksBefore[index].reset(0);
+                }
+
+                if (variablesAfter[index] != null)
+                {
+                    variablesAfter[index].reset(0);
+                }
+
+                if (stacksAfter[index] != null)
+                {
+                    stacksAfter[index].reset(0);
+                }
+            }
+        }
+
+        codeLength = newCodeLength;
 
         defaultU2maxLocals = codeAttribute.u2maxLocals;
         defaultU2maxStack = codeAttribute.u2maxStack;
