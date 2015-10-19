@@ -2,7 +2,7 @@
  * ProGuard -- shrinking, optimization, obfuscation, and preverification
  *             of Java bytecode.
  *
- * Copyright (c) 2002-2013 Eric Lafortune (eric@graphics.cornell.edu)
+ * Copyright (c) 2002-2014 Eric Lafortune (eric@graphics.cornell.edu)
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -35,7 +35,7 @@ public class ZipDataEntry implements DataEntry
     private final DataEntry      parent;
     private final ZipEntry       zipEntry;
     private       ZipInputStream zipInputStream;
-    private final InputStream    bufferedInputStream;
+    private       InputStream    bufferedInputStream;
 
 
     public ZipDataEntry(DataEntry      parent,
@@ -55,12 +55,12 @@ public class ZipDataEntry implements DataEntry
     {
         // Get the right separators.
         String name = zipEntry.getName()
-            .replace(File.separatorChar, ClassConstants.INTERNAL_PACKAGE_SEPARATOR);
+            .replace(File.separatorChar, ClassConstants.PACKAGE_SEPARATOR);
 
         // Chop the trailing directory slash, if any.
         int length = name.length();
         return length > 0 &&
-               name.charAt(length-1) == ClassConstants.INTERNAL_PACKAGE_SEPARATOR ?
+               name.charAt(length-1) == ClassConstants.PACKAGE_SEPARATOR ?
                    name.substring(0, length -1) :
                    name;
     }
@@ -74,6 +74,11 @@ public class ZipDataEntry implements DataEntry
 
     public InputStream getInputStream() throws IOException
     {
+        if (bufferedInputStream == null)
+        {
+            bufferedInputStream = new BufferedInputStream(zipInputStream);
+        }
+
         return bufferedInputStream;
     }
 
@@ -81,7 +86,8 @@ public class ZipDataEntry implements DataEntry
     public void closeInputStream() throws IOException
     {
         zipInputStream.closeEntry();
-        zipInputStream = null;
+        zipInputStream      = null;
+        bufferedInputStream = null;
     }
 
 

@@ -2,7 +2,7 @@
  * ProGuard -- shrinking, optimization, obfuscation, and preverification
  *             of Java bytecode.
  *
- * Copyright (c) 2002-2013 Eric Lafortune (eric@graphics.cornell.edu)
+ * Copyright (c) 2002-2014 Eric Lafortune (eric@graphics.cornell.edu)
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -47,8 +47,6 @@ public class ClassPathEntry
     private List    earFilter;
     private List    zipFilter;
 
-    private volatile String name;
-
     /**
      * Creates a new ClassPathEntry with the given file and output flag.
      */
@@ -58,32 +56,31 @@ public class ClassPathEntry
         this.output = isOutput;
     }
 
+    private volatile String cachedName;
+
 
     /**
      * Returns the path name of the entry.
      */
     public String getName()
     {
-        if (name == null)
-        {
-            synchronized (this)
-            {
-                if (name == null)
-                {
-                    try
-                    {
-                        name = file.getCanonicalPath();
-                    }
-                    catch (IOException ex)
-                    {
-                        name = file.getPath();
-                    }
-                }
-            }
+		synchronized (this)
+		{
+			if (cachedName == null)
+			{
+				try
+				{
+					cachedName = file.getCanonicalPath();
+				}
+				catch (IOException ex)
+				{
+					cachedName = file.getPath();
+				}
+			}
         }
-        return name;
-    }
 
+        return cachedName;
+    }
 
     /**
      * Returns the file.
@@ -101,8 +98,8 @@ public class ClassPathEntry
     {
         synchronized (this)
         {
-            this.file = file;
-            name = null;
+            this.file       = file;
+            this.cachedName = null;
         }
     }
 
@@ -209,6 +206,21 @@ public class ClassPathEntry
 
         return string.regionMatches(true, stringLength -
                                           suffixLength, suffix, 0, suffixLength);
+    }
+
+
+    /**
+     * Returns whether this data entry has any kind of filter.
+     */
+    public boolean isFiltered()
+    {
+        return filter    != null ||
+               apkFilter != null ||
+               jarFilter != null ||
+               aarFilter != null ||
+               warFilter != null ||
+               earFilter != null ||
+               zipFilter != null;
     }
 
 
