@@ -22,7 +22,6 @@ CLASSES=classes
 LIB=lib
 
 PROGUARD=proguard/ProGuard
-PROGUARD_GUI=proguard/gui/ProGuardGUI
 RETRACE=proguard/retrace/ReTrace
 ANT_TASK=proguard/ant/ProGuardTask
 GRADLE_TASK=proguard/gradle/ProGuardTask
@@ -38,7 +37,6 @@ $GRADLE_HOME/lib/groovy-all-2.3.10.jar
 WTK_JAR=$WTK_HOME/wtklib/kenv.zip
 
 PROGUARD_JAR=$LIB/proguard.jar
-PROGUARD_GUI_JAR=$LIB/proguardgui.jar
 RETRACE_JAR=$LIB/retrace.jar
 
 #
@@ -76,9 +74,6 @@ mkdir -p "$CLASSES"
 
 compile   $PROGUARD
 createjar $PROGUARD "$PROGUARD_JAR"
-
-compile   $PROGUARD_GUI
-createjar $PROGUARD_GUI "$PROGUARD_GUI_JAR"
 
 compile   $RETRACE
 createjar $RETRACE "$RETRACE_JAR"
