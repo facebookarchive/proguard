@@ -283,6 +283,19 @@ public class LibraryClass implements Clazz
         return null;
     }
 
+    public void setMethods(final LibraryMethod[] libraryMethods, int count) {
+        if(count == 0) {
+            methods = libraryMethods;
+            return;
+        }
+
+        if(count == libraryMethods.length) {
+            methods = libraryMethods;
+        } else {
+            methods = new LibraryMethod[count];
+            System.arraycopy(libraryMethods, 0, methods, 0, count);
+        }
+    }
 
     public Method findMethod(String name, String descriptor)
     {

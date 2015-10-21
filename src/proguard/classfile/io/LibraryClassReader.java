@@ -202,12 +202,11 @@ implements   ClassVisitor,
         // Copy the visible methods (if any) into a methods array of the right size.
         if (visibleMethodsCount == 0)
         {
-            libraryClass.methods = EMPTY_LIBRARY_METHODS;
+            libraryClass.setMethods(EMPTY_LIBRARY_METHODS, 0);
         }
         else
         {
-            libraryClass.methods = new LibraryMethod[visibleMethodsCount];
-            System.arraycopy(reusableMethods, 0, libraryClass.methods, 0, visibleMethodsCount);
+            libraryClass.setMethods(reusableMethods, visibleMethodsCount);
         }
 
         // Skip the class attributes.
