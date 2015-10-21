@@ -11,7 +11,7 @@ desktop, on tablets, on smartphones, and on embedded devices. It also makes code
 more difficult to reverse engineer.
 
 This is a fork of ProGuard, You can find upstream here: 
-  http://sourceforge.net/p/proguard/code/ci/proguard4.11/tree/
+  http://sourceforge.net/p/proguard/
 
 # Contributing
 
