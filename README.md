@@ -10,14 +10,8 @@ ProGuard is useful for making code more compact and more efficient, on the
 desktop, on tablets, on smartphones, and on embedded devices. It also makes code
 more difficult to reverse engineer.
 
-This is a faster fork of ProGuard, based off of ProGuard 4.11.  Our tests show 
-this fork to be 2.5x faster than upstream ProGuard and produces bit-for-bit 
-identical output.
-
-You can find upstream here: http://sourceforge.net/p/proguard/code/ci/proguard4.11/tree/
-
-The goal of this fork is to remain bit-for-bit compatible with upstream, and to
-ideally get these patches into upstream proguard.
+This is a fork of ProGuard, You can find upstream here: 
+  http://sourceforge.net/p/proguard/code/ci/proguard4.11/tree/
 
 # Contributing
 
