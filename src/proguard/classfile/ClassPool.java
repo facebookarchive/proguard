@@ -32,10 +32,7 @@ import java.util.*;
  */
 public class ClassPool
 {
-    // We're using a sorted tree map instead of a hash map to store the classes,
-    // in order to make the processing more deterministic.
-    private final Map classes = new TreeMap();
-
+    private final Map classes = new LinkedHashMap();
 
     /**
      * Clears the class pool.
