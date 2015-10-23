@@ -36,6 +36,12 @@ public class SettableMatcher implements StringMatcher
         this.matcher = matcher;
     }
 
+    // Implementations for StringMatcher.
+
+    public boolean matches(char[] string, int start, int end)
+    {
+        return matcher.matches(string, start, end);
+    }
 
     // Implementations for StringMatcher.
 

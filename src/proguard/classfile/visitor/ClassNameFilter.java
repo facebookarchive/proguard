@@ -107,6 +107,6 @@ public class ClassNameFilter implements ClassVisitor
 
     private boolean accepted(String name)
     {
-        return regularExpressionMatcher.matches(name);
+        return StringMatcherUtil.matchesString(regularExpressionMatcher, name);
     }
 }

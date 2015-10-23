@@ -32,7 +32,10 @@ public interface StringMatcher
     /**
      * Checks whether the given string matches.
      * @param string the string to match.
-     * @return a boolean indicating whether the string matches the criterion.
+     * @param start
+     * @param end @return a boolean indicating whether the string matches the criterion.
      */
+    public boolean matches(char[] string, int start, int end);
+
     public boolean matches(String string);
 }

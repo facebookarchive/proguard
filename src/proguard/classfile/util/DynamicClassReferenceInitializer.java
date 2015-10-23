@@ -28,6 +28,7 @@ import proguard.classfile.constant.visitor.ConstantVisitor;
 import proguard.classfile.instruction.*;
 import proguard.classfile.instruction.visitor.InstructionVisitor;
 import proguard.util.StringMatcher;
+import proguard.util.StringMatcherUtil;
 
 /**
  * This InstructionVisitor initializes any constant <code>Class.forName</code> or
@@ -316,7 +317,7 @@ implements   InstructionVisitor,
     {
         // Print out a note about the class cast.
         if (noteExceptionMatcher == null ||
-            !noteExceptionMatcher.matches(classConstant.getName(clazz)))
+            !StringMatcherUtil.matchesString(noteExceptionMatcher,classConstant.getName(clazz)))
         {
             notePrinter.print(clazz.getName(),
                               classConstant.getName(clazz),

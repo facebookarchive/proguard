@@ -109,6 +109,6 @@ public class MemberNameFilter implements MemberVisitor
 
     private boolean accepted(String name)
     {
-        return regularExpressionMatcher.matches(name);
+        return StringMatcherUtil.matchesString(regularExpressionMatcher, name);
     }
 }
