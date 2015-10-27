@@ -114,7 +114,7 @@ public class Utf8Constant extends Constant
     public void setString(String utf8String)
     {
         this.bytes  = null;
-        this.string = utf8String;
+        this.string = (utf8String == null) ? null : utf8String.intern();
     }
 
 
@@ -280,6 +280,6 @@ public class Utf8Constant extends Constant
             }
         }
 
-        return new String(chars, 0, charIndex);
+        return new String(chars, 0, charIndex).intern();
     }
 }
