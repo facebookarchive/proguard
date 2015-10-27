@@ -24,6 +24,7 @@ import proguard.classfile.*;
 import proguard.classfile.constant.visitor.ConstantVisitor;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 
 /**
  * This Constant represents a UTF-8 constant in the constant pool.
@@ -49,6 +50,7 @@ public class Utf8Constant extends Constant
     private static final int  THREE_BYTE_MASK2     = 0x3f;
     private static final int  THREE_BYTE_MASK3     = 0x3f;
 
+    private static final Charset UTF8_CHARSET = Charset.forName("UTF-8");
 
     // There are a lot of Utf8Constant objects, so we're optimising their storage.
     // Initially, we're storing the UTF-8 bytes in a byte array.
@@ -76,7 +78,7 @@ public class Utf8Constant extends Constant
     public Utf8Constant(String string)
     {
         this.bytes  = null;
-        this.string = string;
+        this.string = (string == null) ? null : string.intern();
     }
 
 
@@ -95,16 +97,15 @@ public class Utf8Constant extends Constant
      */
     public byte[] getBytes()
     {
-        try
-        {
-            switchToByteArrayRepresentation();
-        }
-        catch (UnsupportedEncodingException ex)
-        {
-            throw new RuntimeException(ex.getMessage());
+        if(bytes != null) {
+            return bytes;
         }
 
-        return bytes;
+        if(string == null) {
+            return  null;
+        }
+
+        return string.getBytes(UTF8_CHARSET);
     }
 
 
@@ -114,7 +115,11 @@ public class Utf8Constant extends Constant
     public void setString(String utf8String)
     {
         this.bytes  = null;
-        this.string = utf8String;
+        if(utf8String == null) {
+            this.string = null;
+        } else {
+            this.string = utf8String.intern();
+        }
     }
 
 
@@ -152,19 +157,6 @@ public class Utf8Constant extends Constant
     // Small utility methods.
 
     /**
-     * Switches to a byte array representation of the UTF-8 data.
-     */
-    private void switchToByteArrayRepresentation() throws UnsupportedEncodingException
-    {
-        if (bytes == null)
-        {
-            bytes  = getByteArrayRepresentation(string);
-            string = null;
-        }
-    }
-
-
-    /**
      * Switches to a String representation of the UTF-8 data.
      */
     private void switchToStringRepresentation() throws UnsupportedEncodingException
@@ -175,68 +167,6 @@ public class Utf8Constant extends Constant
             bytes  = null;
         }
     }
-
-
-    /**
-     * Returns the modified UTF-8 byte array representation of the given string.
-     */
-    private byte[] getByteArrayRepresentation(String string) throws UnsupportedEncodingException
-    {
-        // We're computing the byte array ourselves, because the implementation
-        // of String.getBytes("UTF-8") has a bug, at least up to JRE 1.4.2.
-        // Also note the special treatment of the 0 character.
-
-        // Compute the byte array length.
-        int byteLength   = 0;
-        int stringLength = string.length();
-        for (int stringIndex = 0; stringIndex < stringLength; stringIndex++)
-        {
-            char c = string.charAt(stringIndex);
-
-            // The character is represented by one, two, or three bytes.
-            byteLength += c == 0                ? 2 :
-                          c <  TWO_BYTE_LIMIT   ? 1 :
-                          c <  THREE_BYTE_LIMIT ? 2 :
-                                                  3;
-        }
-
-        // Allocate the byte array with the computed length.
-        byte[] bytes  = new byte[byteLength];
-
-        // Fill out the array.
-        int byteIndex = 0;
-        for (int stringIndex = 0; stringIndex < stringLength; stringIndex++)
-        {
-            char c = string.charAt(stringIndex);
-            if (c == 0)
-            {
-                // The 0 character gets a two-byte representation in classes.
-                bytes[byteIndex++] = (byte)TWO_BYTE_CONSTANT1;
-                bytes[byteIndex++] = (byte)TWO_BYTE_CONSTANT2;
-            }
-            else if (c < TWO_BYTE_LIMIT)
-            {
-                // The character is represented by a single byte.
-                bytes[byteIndex++] = (byte)c;
-            }
-            else if (c < THREE_BYTE_LIMIT)
-            {
-                // The character is represented by two bytes.
-                bytes[byteIndex++] = (byte)(TWO_BYTE_CONSTANT1 | ((c >>> TWO_BYTE_SHIFT1) & TWO_BYTE_MASK1));
-                bytes[byteIndex++] = (byte)(TWO_BYTE_CONSTANT2 | ( c                      & TWO_BYTE_MASK2));
-            }
-            else
-            {
-                // The character is represented by three bytes.
-                bytes[byteIndex++] = (byte)(THREE_BYTE_CONSTANT1 | ((c >>> THREE_BYTE_SHIFT1) & THREE_BYTE_MASK1));
-                bytes[byteIndex++] = (byte)(THREE_BYTE_CONSTANT2 | ((c >>> THREE_BYTE_SHIFT2) & THREE_BYTE_MASK2));
-                bytes[byteIndex++] = (byte)(THREE_BYTE_CONSTANT3 | ( c                        & THREE_BYTE_MASK3));
-            }
-        }
-
-        return bytes;
-    }
-
 
     /**
      * Returns the String representation of the given modified UTF-8 byte array.
@@ -280,6 +210,6 @@ public class Utf8Constant extends Constant
             }
         }
 
-        return new String(chars, 0, charIndex);
+        return new String(chars, 0, charIndex).intern();
     }
 }
