@@ -38,7 +38,6 @@ public class TypedReferenceValue extends ReferenceValue
 {
     private static final boolean DEBUG = false;
 
-
     protected final String  type;
     protected final Clazz   referencedClass;
     protected final boolean mayBeNull;
@@ -51,7 +50,11 @@ public class TypedReferenceValue extends ReferenceValue
                                Clazz   referencedClass,
                                boolean mayBeNull)
     {
-        this.type            = type;
+        if(type == null) {
+            this.type = null;
+        } else {
+            this.type = type.intern();
+        }
         this.referencedClass = referencedClass;
         this.mayBeNull       = mayBeNull;
     }
