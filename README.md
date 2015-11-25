@@ -20,7 +20,7 @@ focused on making ProGuard itself faster while still having identical output.
 
 ## Building
 
-    ant -f build/build.xml proguard
+    ant -f buildscripts/build.xml proguard
 Then, you can use `lib/proguard.jar` as a drop in replacement for the
 `proguard.jar` shipped with the Android SDK or used by your build tool.
 
