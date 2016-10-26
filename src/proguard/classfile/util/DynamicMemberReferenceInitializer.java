@@ -28,7 +28,6 @@ import proguard.classfile.instruction.*;
 import proguard.classfile.instruction.visitor.InstructionVisitor;
 import proguard.classfile.visitor.*;
 import proguard.util.StringMatcher;
-import proguard.util.StringMatcherUtil;
 
 /**
  * This InstructionVisitor initializes any constant
@@ -806,7 +805,7 @@ implements   InstructionVisitor,
                 clazz.getStringString(memberNameIndex);
 
             if (noteExceptionMatcher == null ||
-                !StringMatcherUtil.matchesString(noteExceptionMatcher, memberName))
+                !noteExceptionMatcher.matches(memberName))
             {
                 // Compose the external member name and partial descriptor.
                 String externalMemberDescription = memberName;

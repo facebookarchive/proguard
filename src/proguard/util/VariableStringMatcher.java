@@ -26,7 +26,7 @@ package proguard.util;
  *
  * @author Eric Lafortune
  */
-public class VariableStringMatcher implements StringMatcher
+public class VariableStringMatcher extends StringMatcher
 {
     private final char[]        allowedCharacters;
     private final char[]        disallowedCharacters;
@@ -50,54 +50,15 @@ public class VariableStringMatcher implements StringMatcher
 
     // Implementations for StringMatcher.
 
-    public boolean matches(char[] string, int start, int end)
+    protected boolean matches(String string, int offset, int length)
     {
-        int strLen = end - start + 1;
-        if (strLen < minimumLength)
+        if (length < minimumLength)
         {
             return false;
         }
 
         // Check the first minimum number of characters.
-        for (int index = 0; index < minimumLength; index++)
-        {
-            if (!isAllowedCharacter(string[start + index]))
-            {
-                return false;
-            }
-        }
-
-        int maximumLength = Math.min(this.maximumLength, strLen);
-
-        // Check the remaining characters, up to the maximum number.
-        for (int index = minimumLength; index < maximumLength; index++)
-        {
-            if (nextMatcher.matches(string, start + index, end))
-            {
-                return true;
-            }
-
-            if (!isAllowedCharacter(string[start + index]))
-            {
-                return false;
-            }
-        }
-
-        // Check the remaining characters in the string.
-        return nextMatcher.matches(string, start + maximumLength , end);
-    }
-
-    // Implementations for StringMatcher.
-
-    public boolean matches(String string)
-    {
-        if (string.length() < minimumLength)
-        {
-            return false;
-        }
-
-        // Check the first minimum number of characters.
-        for (int index = 0; index < minimumLength; index++)
+        for (int index = offset; index < offset + minimumLength; index++)
         {
             if (!isAllowedCharacter(string.charAt(index)))
             {
@@ -105,12 +66,12 @@ public class VariableStringMatcher implements StringMatcher
             }
         }
 
-        int maximumLength = Math.min(this.maximumLength, string.length());
+        int maximumLength = Math.min(this.maximumLength, length);
 
         // Check the remaining characters, up to the maximum number.
-        for (int index = minimumLength; index < maximumLength; index++)
+        for (int index = offset + minimumLength; index < offset + maximumLength; index++)
         {
-            if (nextMatcher.matches(string.substring(index)))
+            if (nextMatcher.matches(string, index, length + offset - index))
             {
                 return true;
             }
@@ -122,8 +83,9 @@ public class VariableStringMatcher implements StringMatcher
         }
 
         // Check the remaining characters in the string.
-        return nextMatcher.matches(string.substring(maximumLength));
+        return nextMatcher.matches(string, offset + maximumLength, length - maximumLength);
     }
+
 
     // Small utility methods.
 

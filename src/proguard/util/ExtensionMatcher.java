@@ -26,7 +26,7 @@ package proguard.util;
  *
  * @author Eric Lafortune
  */
-public class ExtensionMatcher implements StringMatcher
+public class ExtensionMatcher extends StringMatcher
 {
     private final String extension;
 
@@ -38,14 +38,14 @@ public class ExtensionMatcher implements StringMatcher
     public ExtensionMatcher(String extension)
     {
         this.extension = extension;
-
     }
+
 
     // Implementations for StringMatcher.
 
-    public boolean matches(String string)
+    protected boolean matches(String string, int offset, int length)
     {
-        return endsWithIgnoreCase(string, extension);
+        return endsWithIgnoreCase(string, offset, length, extension);
     }
 
 
@@ -53,43 +53,10 @@ public class ExtensionMatcher implements StringMatcher
      * Returns whether the given string ends with the given suffix, ignoring its
      * case.
      */
-    private static boolean endsWithIgnoreCase(String string, String suffix)
-    {
-        int stringLength = string.length();
-        int suffixLength = suffix.length();
-
-        return string.regionMatches(true, stringLength - suffixLength, suffix, 0, suffixLength);
-    }
-
-
-    // Implementations for StringMatcher.
-
-    public boolean matches(char[] string, int start, int end)
-    {
-        return endsWithIgnoreCase(string, start, end, extension);
-    }
-
-
-    /**
-     * Returns whether the given string ends with the given suffix, ignoring its
-     * case.
-     */
-    private static boolean endsWithIgnoreCase(char[] string, int start, int end, String suffix)
+    private static boolean endsWithIgnoreCase(String string, int offset, int length, String suffix)
     {
         int suffixLength = suffix.length();
-        int stringLength = end - start + 1;
 
-        if (suffixLength > stringLength) {
-            return false;
-        }
-
-        for (int i = 0; i < suffixLength; i++) {
-
-            if (Character.toUpperCase(string[end - i]) != Character.toUpperCase(suffix.charAt(suffixLength - 1 - i))) {
-                return false;
-            }
-        }
-
-        return true;
+        return string.regionMatches(true, offset + length - suffixLength, suffix, 0, suffixLength);
     }
 }

@@ -26,7 +26,7 @@ package proguard.util;
  *
  * @author Eric Lafortune
  */
-public class FixedStringMatcher implements StringMatcher
+public class FixedStringMatcher extends StringMatcher
 {
     private final String        fixedString;
     private final StringMatcher nextMatcher;
@@ -44,39 +44,17 @@ public class FixedStringMatcher implements StringMatcher
         this.nextMatcher = nextMatcher;
     }
 
-    // Implementations for StringMatcher.
-
-    public boolean matches(char[] string, int start, int end)
-    {
-        return startsWithFixedString(string, start, end) && (nextMatcher == null ||
-                nextMatcher.matches(string, start + fixedString.length(), end));
-    }
-
-    private boolean startsWithFixedString(char[] string, int start, int end) {
-        int strLen = end - start + 1;
-        int fixedStrLen = fixedString.length();
-
-        // If the fixedString length is greater than the strLength it can't be starting with it.
-        if (fixedStrLen > strLen) {
-            return false;
-        }
-
-        // Do the character matching:
-        for (int i = 0; i < fixedStrLen; i++) {
-            if (string[start + i] != fixedString.charAt(i)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
 
     // Implementations for StringMatcher.
 
-    public boolean matches(String string)
+    protected boolean matches(String string, int offset, int length)
     {
-        return string.startsWith(fixedString) &&
-                (nextMatcher == null ||
-                 nextMatcher.matches(string.substring(fixedString.length())));
+        int fixedStringLength = fixedString.length();
+        return length >= fixedStringLength &&
+               string.startsWith(fixedString, offset) &&
+               (nextMatcher == null ||
+                nextMatcher.matches(string,
+                                    offset + fixedStringLength,
+                                    length - fixedStringLength));
     }
 }

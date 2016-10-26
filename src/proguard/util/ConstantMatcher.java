@@ -25,7 +25,7 @@ package proguard.util;
  *
  * @author Eric Lafortune
  */
-public class ConstantMatcher implements StringMatcher
+public class ConstantMatcher extends StringMatcher
 {
     private boolean matches;
 
@@ -41,12 +41,8 @@ public class ConstantMatcher implements StringMatcher
 
     // Implementations for StringMatcher.
 
-    public boolean matches(char[] string, int start, int end)
+    protected boolean matches(String string, int offset, int length)
     {
-        return matches;
-    }
-
-    public boolean matches(String string) {
         return matches;
     }
 }

@@ -462,6 +462,6 @@ implements   AttributeVisitor
 
     private boolean accepted(Clazz clazz, Attribute attribute)
     {
-        return StringMatcherUtil.matchesString(regularExpressionMatcher, attribute.getAttributeName(clazz));
+        return regularExpressionMatcher.matches(attribute.getAttributeName(clazz));
     }
 }

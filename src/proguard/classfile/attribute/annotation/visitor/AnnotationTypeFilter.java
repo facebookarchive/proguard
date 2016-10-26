@@ -105,6 +105,6 @@ implements   AnnotationVisitor
 
     private boolean accepted(String name)
     {
-        return StringMatcherUtil.matchesString(regularExpressionMatcher, name);
+        return regularExpressionMatcher.matches(name);
     }
 }

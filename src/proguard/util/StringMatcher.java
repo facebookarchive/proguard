@@ -22,20 +22,30 @@ package proguard.util;
 
 
 /**
- * This interface provides a method to determine whether strings match a given
- * criterion, which is specified by the implementation.
+ * This abstract class provides methods to determine whether strings match
+ * a given criterion, which is specified by the implementation.
  *
  * @author Eric Lafortune
  */
-public interface StringMatcher
+public abstract class StringMatcher
 {
     /**
      * Checks whether the given string matches.
      * @param string the string to match.
-     * @param start
-     * @param end @return a boolean indicating whether the string matches the criterion.
+     * @return a boolean indicating whether the string matches the criterion.
      */
-    public boolean matches(char[] string, int start, int end);
+    public boolean matches(String string)
+    {
+        return matches(string, 0, string.length());
+    }
 
-    public boolean matches(String string);
+
+    /**
+     * Checks whether the given substring matches.
+     * @param string the string to match.
+     * @param offset the start offset of the substring.
+     * @param length the length of the substring.
+     * @return a boolean indicating whether the substring matches the criterion.
+     */
+    protected abstract boolean matches(String string, int offset, int length);
 }

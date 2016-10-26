@@ -366,10 +366,9 @@ implements   ClassVisitor,
         {
             // Are we keeping the package name?
             if (keepPackageNamesMatcher != null &&
-                    StringMatcherUtil.matchesString(keepPackageNamesMatcher,
-                            packagePrefix.length() > 0 ?
-                            packagePrefix.substring(0, packagePrefix.length() - 1) :
-                            packagePrefix))
+                keepPackageNamesMatcher.matches(packagePrefix.length() > 0 ?
+                    packagePrefix.substring(0, packagePrefix.length()-1) :
+                    packagePrefix))
             {
                 return packagePrefix;
             }

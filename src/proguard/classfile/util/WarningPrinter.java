@@ -87,7 +87,7 @@ public class WarningPrinter
     public boolean accepts(String className)
     {
         return classFilter == null ||
-            !StringMatcherUtil.matchesString(classFilter, className);
+            !classFilter.matches(className);
     }
 
 
@@ -110,8 +110,8 @@ public class WarningPrinter
     public boolean accepts(String className1, String className2)
     {
         return classFilter == null ||
-            !(StringMatcherUtil.matchesString(classFilter, className1) ||
-              StringMatcherUtil.matchesString(classFilter,className2));
+            !(classFilter.matches(className1) ||
+              classFilter.matches(className2));
     }
 
 

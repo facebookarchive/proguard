@@ -25,17 +25,12 @@ package proguard.util;
  *
  * @author Eric Lafortune
  */
-public class EmptyStringMatcher implements StringMatcher
+public class EmptyStringMatcher extends StringMatcher
 {
     // Implementations for StringMatcher.
 
-    public boolean matches(char[] string, int start, int end)
+    protected boolean matches(String string, int offset, int length)
     {
-        return end - start + 1 <= 0;
-    }
-
-    public boolean matches(String string)
-    {
-        return string.length() == 0;
+        return length == 0;
     }
 }

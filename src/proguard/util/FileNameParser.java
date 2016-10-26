@@ -110,7 +110,7 @@ public class FileNameParser implements StringParser
             {
                 String string = args[index];
                 System.out.print("String             ["+string+"]");
-                System.out.println(" -> match = "+ StringMatcherUtil.matchesString(matcher, args[index]));
+                System.out.println(" -> match = "+matcher.matches(args[index]));
             }
         }
         catch (Exception ex)
