@@ -64,19 +64,20 @@ public class ClassPathEntry
      */
     public String getName()
     {
-		synchronized (this)
-		{
-			if (cachedName == null)
-			{
-				try
-				{
-					cachedName = file.getCanonicalPath();
-				}
-				catch (IOException ex)
-				{
-					cachedName = file.getPath();
-				}
-			}
+        if (cachedName != null) {
+            return cachedName;
+        }
+
+        synchronized (file) {
+            if(cachedName != null) {
+                return cachedName;
+            }
+
+            try {
+                cachedName = file.getCanonicalPath();
+            } catch (IOException ex) {
+                cachedName = file.getPath();
+            }
         }
 
         return cachedName;
