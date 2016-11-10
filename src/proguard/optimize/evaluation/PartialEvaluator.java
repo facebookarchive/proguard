@@ -72,8 +72,6 @@ implements   AttributeVisitor,
     private int[]                    evaluationCounts     = new int[ClassConstants.TYPICAL_CODE_LENGTH];
     private boolean                  evaluateExceptions;
     private int                      codeLength;
-    private int                      defaultU2maxLocals;
-    private int                      defaultU2maxStack;
 
     private final BasicBranchUnit    branchUnit;
     private final BranchTargetFinder branchTargetFinder;
@@ -471,13 +469,7 @@ implements   AttributeVisitor,
      */
     public TracedVariables getVariablesBefore(int instructionOffset)
     {
-        TracedVariables variableBefore = variablesBefore[instructionOffset];
-        if (variableBefore == null)
-        {
-            variableBefore = new TracedVariables(defaultU2maxLocals);
-            variablesBefore[instructionOffset] = variableBefore;
-        }
-        return variableBefore;
+        return variablesBefore[instructionOffset];
     }
 
 
@@ -487,13 +479,7 @@ implements   AttributeVisitor,
      */
     public TracedVariables getVariablesAfter(int instructionOffset)
     {
-        TracedVariables variableAfter = variablesAfter[instructionOffset];
-        if (variableAfter == null)
-        {
-            variableAfter = new TracedVariables(defaultU2maxLocals);
-            variablesAfter[instructionOffset] = variableAfter;
-        }
-        return variableAfter;
+        return variablesAfter[instructionOffset];
     }
 
 
@@ -503,13 +489,7 @@ implements   AttributeVisitor,
      */
     public TracedStack getStackBefore(int instructionOffset)
     {
-        TracedStack stackBefore = stacksBefore[instructionOffset];
-        if (stackBefore == null)
-        {
-            stackBefore = new TracedStack(defaultU2maxStack);
-            stacksBefore[instructionOffset] = stackBefore;
-        }
-        return stackBefore;
+        return stacksBefore[instructionOffset];
     }
 
 
@@ -519,13 +499,7 @@ implements   AttributeVisitor,
      */
     public TracedStack getStackAfter(int instructionOffset)
     {
-        TracedStack stackAfter = stacksAfter[instructionOffset];
-        if (stackAfter == null)
-        {
-            stackAfter = new TracedStack(defaultU2maxStack);
-            stacksAfter[instructionOffset] = stackAfter;
-        }
-        return stackAfter;
+        return stacksAfter[instructionOffset];
     }
 
 
@@ -1209,9 +1183,6 @@ implements   AttributeVisitor,
         }
 
         codeLength = newCodeLength;
-
-        defaultU2maxLocals = codeAttribute.u2maxLocals;
-        defaultU2maxStack = codeAttribute.u2maxStack;
     }
 
 

@@ -47,6 +47,9 @@ public class ClassPathEntry
     private List    earFilter;
     private List    zipFilter;
 
+    private String cachedName;
+
+
     /**
      * Creates a new ClassPathEntry with the given file and output flag.
      */
@@ -56,32 +59,36 @@ public class ClassPathEntry
         this.output = isOutput;
     }
 
-    private volatile String cachedName;
-
 
     /**
      * Returns the path name of the entry.
      */
     public String getName()
     {
-        if (cachedName != null) {
-            return cachedName;
-        }
-
-        synchronized (file) {
-            if(cachedName != null) {
-                return cachedName;
-            }
-
-            try {
-                cachedName = file.getCanonicalPath();
-            } catch (IOException ex) {
-                cachedName = file.getPath();
-            }
+        if (cachedName == null)
+        {
+            cachedName = getUncachedName();
         }
 
         return cachedName;
     }
+
+
+    /**
+     * Returns the uncached path name of the entry.
+     */
+    private String getUncachedName()
+    {
+        try
+        {
+            return file.getCanonicalPath();
+        }
+        catch (IOException ex)
+        {
+            return file.getPath();
+        }
+    }
+
 
     /**
      * Returns the file.
@@ -97,11 +104,8 @@ public class ClassPathEntry
      */
     public void setFile(File file)
     {
-        synchronized (this)
-        {
-            this.file       = file;
-            this.cachedName = null;
-        }
+        this.file       = file;
+        this.cachedName = null;
     }
 
 

@@ -108,18 +108,15 @@ implements   ClassVisitor,
     private final CodeAttributeEditor codeAttributeEditor =
         new CodeAttributeEditor(true, true);
 
-    private final InstructionSequenceReplacer instructionSequenceReplacer;
+    private final InstructionSequenceReplacer instructionSequenceReplacer =
+        new InstructionSequenceReplacer(CONSTANTS,
+                                        INSTRUCTIONS,
+                                        REPLACEMENT_INSTRUCTIONS,
+                                        null,
+                                        codeAttributeEditor);
 
     private final MemberVisitor initializerSimplifier = new AllAttributeVisitor(this);
 
-    public SimpleEnumClassSimplifier() {
-        this.instructionSequenceReplacer =
-            new InstructionSequenceReplacer(CONSTANTS,
-                    INSTRUCTIONS,
-                    REPLACEMENT_INSTRUCTIONS,
-                    null,
-                    codeAttributeEditor);
-    }
 
     // Implementations for ClassVisitor.
 

@@ -45,7 +45,6 @@ public class ZipDataEntry implements DataEntry
         this.parent         = parent;
         this.zipEntry       = zipEntry;
         this.zipInputStream = zipInputStream;
-        this.bufferedInputStream = new BufferedInputStream(zipInputStream);
     }
 
 

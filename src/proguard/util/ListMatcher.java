@@ -46,6 +46,7 @@ public class ListMatcher extends StringMatcher
         this.negate   = negate;
     }
 
+
     // Implementations for StringMatcher.
 
     protected boolean matches(String string, int offset, int length)
@@ -55,26 +56,6 @@ public class ListMatcher extends StringMatcher
         {
             StringMatcher matcher = matchers[index];
             if (matcher.matches(string, offset, length))
-            {
-                return negate == null ||
-                        !negate[index];
-            }
-        }
-
-        return negate != null &&
-                negate[negate.length - 1];
-
-    }
-
-    // Implementations for StringMatcher.
-
-    public boolean matches(char[] string, int start, int end)
-    {
-        // Check the list of matchers.
-        for (int index = 0; index < matchers.length; index++)
-        {
-            StringMatcher matcher = matchers[index];
-            if (matcher.matches(string, start, end))
             {
                 return negate == null ||
                        !negate[index];
