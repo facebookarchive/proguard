@@ -15,7 +15,7 @@ This is a fork of ProGuard, You can find upstream here:
 
 # Contributing
 
-We're not adding any features into ProGuard (yet), so pull requests should be
+We're not adding any features into ProGuard, so pull requests should be
 focused on making ProGuard itself faster while still having identical output.
 
 ## Building
