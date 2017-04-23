@@ -267,6 +267,9 @@ public class Initializer
                                               dependencyWarningPrinter));
         }
 
+        // Index members of INVOKEDYNAMIC call
+        programClassPool.classesAccept(new InvokeDynamicInitializer());
+
         // Initialize the subclass hierarchies.
         programClassPool.classesAccept(new ClassSubHierarchyInitializer());
         libraryClassPool.classesAccept(new ClassSubHierarchyInitializer());

@@ -85,7 +85,6 @@ implements   ClassVisitor,
         programClass.attributesAccept(this);
     }
 
-
     // Implementations for ConstantVisitor.
 
     public void visitAnyConstant(Clazz clazz, Constant constant) {}
@@ -197,6 +196,26 @@ implements   ClassVisitor,
                                           interfaceMethodrefConstant.u2nameAndTypeIndex,
                                           referencedClass,
                                           referencedMember);
+            }
+        }
+    }
+
+    public void visitInvokeDynamicConstant(Clazz clazz, InvokeDynamicConstant invokeDynamicConstant)
+    {
+        // Do we know the referenced method?
+        Member referencedMember = invokeDynamicConstant.referencedMember;
+        if (referencedMember != null)
+        {
+            Clazz referencedClass = invokeDynamicConstant.referencedClasses[0];
+
+            // Does it have a new name?
+            String newName = referencedMember.getName(referencedClass);
+
+            if (!invokeDynamicConstant.getName(clazz).equals(newName))
+            {
+                // Update the name and type index.
+                invokeDynamicConstant.u2nameAndTypeIndex =
+                        new ConstantPoolEditor((ProgramClass)clazz).addNameAndTypeConstant(newName, invokeDynamicConstant.getType(clazz));
             }
         }
     }
